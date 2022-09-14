@@ -3,14 +3,14 @@
     <h1 class="text-2xl font-bold">Dice Roll Challenge</h1>
     <div class="mx-auto text-center mt-4">
       <h2 class="text-xl font-medium">Number of Dice</h2>
-      <input type="text" name="numberofdice" class="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-2 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm" />
-      <button @click="rollAll(3)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mb-4 rounded">
+      <input type="number" name="numberofdice" v-model=noOfRolls class="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-2 pr-3 mb-2 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm" />
+      <button @click="rollAll(noOfRolls)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mb-4 rounded">
         ROLL
       </button>
     </div>
-    <div class="mx-auto text-center">
+    <div class="flex flex-row mx-auto text-center">
       <!-- Dice Gallery -->
-      <Die face-no="8" />
+      <Die v-bind:key="index" v-for="die, index in rollsResult" :face-no=die />
       <!-- Dice Gallery ends -->
     </div>
   </div>
@@ -19,20 +19,31 @@
 <script>
 export default {
   name: 'IndexPage',
+  data() {
+    return {
+      noOfRolls: null,
+      rollsResult: {
+        type: Array,
+        default: [],
+      }
+    }
+  },
   methods: {
-    rollDie() {
+    rollDie: function() {
+      const minSideVal = 1;
+      const maxSideVal = 6;
       let rand = Math.random();
-      rand = Math.floor(rand * 6);
-      rand = rand + 1;
+      rand = Math.floor(rand * maxSideVal) + minSideVal;
       return rand;
     },
-    rollAll(noOfRolls) {
+    rollAll: function(noOfRolls) {
+      this.rollsResult = [];
       const rolls = [];
-      for(let i; i <= noOfRolls; i++) {
+      for(let i = 0; i <= noOfRolls - 1; i++) {
           const roll = this.rollDie();
           rolls.push(roll);
       }
-      console.log(rolls);
+      this.rollsResult = rolls;
     },
   }
 }
